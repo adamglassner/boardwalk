@@ -9,7 +9,7 @@
 
 #define MyAppName "Boardwalk"
 #ifndef MyAppVersion
-  #define MyAppVersion "1.0.0"
+  #define MyAppVersion "1.0.1"
 #endif
 #define MyAppPublisher "Bytehawk Studio"
 #define MyAppExeName "Boardwalk.exe"

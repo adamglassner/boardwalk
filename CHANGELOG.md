@@ -2,6 +2,11 @@
 
 All notable changes to Boardwalk. Newest first.
 
+## 1.0.1 - 2026-11-12
+
+### Fixed
+- Switching boards now starts the new board at its first column instead of where the last board was scrolled to.
+
 ## 1.0.0 - 2026-11-12
 
 The first version of Boardwalk, a kanban board app for Windows 10 and 11 by Bytehawk Studio.
