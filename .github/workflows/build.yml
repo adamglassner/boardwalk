@@ -132,6 +132,22 @@ jobs:
             dist/Boardwalk-*-Setup.exe
             dist/Boardwalk-*-win-x64.zip
 
+      - name: Update README screenshots
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        shell: pwsh
+        run: |
+          $map = @{ 'board-light' = 'screenshot-light'; 'board-dark' = 'screenshot-dark'; 'dialog-card' = 'screenshot-card'; 'dialog-card-dark' = 'screenshot-card-dark'; 'board-compact' = 'screenshot-compact'; 'dialog-settings' = 'screenshot-settings'; 'dialog-new-board' = 'screenshot-new-board'; 'empty-state' = 'screenshot-empty' }
+          New-Item -ItemType Directory -Force docs | Out-Null
+          foreach ($k in $map.Keys) { if (Test-Path "screenshots/$k.png") { Copy-Item "screenshots/$k.png" "docs/$($map[$k]).png" -Force } }
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add docs/*.png
+          git diff --cached --quiet
+          if ($LASTEXITCODE -eq 0) { Write-Host 'Screenshots unchanged'; exit 0 }
+          git commit -m 'Update screenshots [skip ci]'
+          git pull --rebase origin main
+          git push origin HEAD:main
+
       - uses: actions/upload-artifact@v4
         if: always()
         with:
