@@ -116,6 +116,7 @@ public partial class MainWindow : Window
         }
         RebuildLabelFilter();
         RenderBoard();
+        BoardScroll.ScrollToLeftEnd();
     }
 
     private void SelectInList(Board b)

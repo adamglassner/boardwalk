@@ -6,6 +6,10 @@ Kanban boards for Windows 10 and 11, by **Bytehawk Studio**. Make a board for ea
 |---|---|
 | ![Boardwalk in Light mode](docs/screenshot-light.png) | ![Boardwalk in Dark mode](docs/screenshot-dark.png) |
 
+Click a card to see everything about it:
+
+![A card in Dark mode](docs/screenshot-card-dark.png)
+
 ## Features
 
 - **As many boards as you like:** one per project, listed in the sidebar with their card counts. Rename, recolour, duplicate (with or without the cards), reorder or delete them.
