@@ -34,7 +34,7 @@ public sealed class NewBoardDialog : DialogBase
 {
     private readonly TextBox _name;
     public string BoardName => _name.Text.Trim();
-    public BoardTemplate Template { get; private set; } = BoardTemplate.Standard;
+    public BoardTemplate ChosenTemplate { get; private set; } = BoardTemplate.Standard;
     public string BoardColor { get; private set; } = "Blue";
 
     private static readonly (BoardTemplate T, string Name, string Text)[] Templates =
@@ -63,7 +63,7 @@ public sealed class NewBoardDialog : DialogBase
             sp.Children.Add(hint);
             var rb = new RadioButton { Content = sp, GroupName = "tpl", IsChecked = t == BoardTemplate.Standard, Margin = new Thickness(0, 0, 0, 8) };
             var tt = t;
-            rb.Checked += (_, _) => Template = tt;
+            rb.Checked += (_, _) => ChosenTemplate = tt;
             Body.Children.Add(rb);
         }
 

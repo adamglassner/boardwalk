@@ -1161,7 +1161,7 @@ public partial class MainWindow : Window
     {
         var d = new NewBoardDialog { Owner = this };
         if (d.ShowDialog() != true) return;
-        var b = BoardStore.CreateBoard(d.BoardName, d.Template, d.BoardColor);
+        var b = BoardStore.CreateBoard(d.BoardName, d.ChosenTemplate, d.BoardColor);
         RefreshBoardList(b);
     }
 

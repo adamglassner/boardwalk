@@ -525,7 +525,7 @@ public partial class MainWindow
             bool ok = next != null && next != c && next.Due == DateTime.Today.AddDays(7) && next.Repeat == RepeatKind.Weekly
                 && c.Repeat == RepeatKind.None && !next.Checklist[0].Done && next.Number > c.Number;
             bool dueLater = BoardStore.NextDue(DateTime.Today.AddDays(-40), RepeatKind.Weekly) >= DateTime.Today
-                && BoardStore.NextDue(new DateTime(2026, 1, 31), RepeatKind.Monthly).Month == 2;
+                && BoardStore.NextDue(new DateTime(2030, 1, 31), RepeatKind.Monthly) == new DateTime(2030, 2, 28);
             if (next != null) BoardStore.DeleteCard(sw, next);
             BoardStore.DeleteCard(sw, c);
             RenderBoard();

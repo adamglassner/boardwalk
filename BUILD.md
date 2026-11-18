@@ -47,7 +47,7 @@ If you installed Inno Setup for your user only, the compiler is at `%LOCALAPPDAT
 
 ## Testing
 
-`Boardwalk.exe --self-test result.txt screenshots` runs Boardwalk's built-in test. It makes boards from every template, adds, moves and reorders cards, checks card limits, labels, priorities, due dates, search and the label filter, archives cards, moves a card to another board, saves and reloads the boards, recovers from a damaged boards file, exports Markdown and board files and imports them again, switches between Light, Dark and Follow Windows, and opens every dialog. It writes PASS/FAIL lines to `result.txt` and screenshots to `screenshots`. It uses a temporary folder, so your own boards and settings aren't touched.
+`Boardwalk.exe --self-test result.txt screenshots` runs Boardwalk's built-in test. It makes boards from every template, adds, moves and reorders cards, checks quick add, undo and redo, blocked-by, sub-tasks, repeating cards, history, versions and the changelog, GitHub address parsing and issue import (with made-up issues, no network), attachments, swimlanes, My week and reminders, card limits, labels, priorities, due dates, search and the label filter, archives cards, moves a card to another board, saves and reloads the boards, recovers from a damaged boards file, exports Markdown and board files and imports them again, switches between Light, Dark and Follow Windows, and opens every dialog. It writes PASS/FAIL lines to `result.txt` and screenshots to `screenshots`. It uses a temporary folder, so your own boards and settings aren't touched.
 
 GitHub runs this on every push, along with an installer test: install to Program Files, check the Start Menu shortcut, uninstall entry and icon, start the app, then uninstall and check nothing is left behind.
 
@@ -79,5 +79,6 @@ GitHub then builds and tests it. If every test passes and there's no `v1.0.1` re
 | What | Where |
 |---|---|
 | Boards | `%APPDATA%\Boardwalk\boards.json` (previous version: `boards.json.bak`) |
-| Settings | `%APPDATA%\Boardwalk\settings.json` |
+| Settings (the GitHub token is encrypted for your Windows account) | `%APPDATA%\Boardwalk\settings.json` |
+| Attachments | `%APPDATA%\Boardwalk\attachments` |
 | Error log (only if something goes wrong) | `%APPDATA%\Boardwalk\error.log` |
