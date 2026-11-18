@@ -160,14 +160,14 @@ public sealed class BoardDialog : DialogBase
         string repo = "";
         if (repoText.Length > 0)
         {
-            if (!GitHubService.TryParseRepo(repoText, out var owner, out var name))
+            if (!GitHubService.TryParseRepo(repoText, out var owner, out var repoName))
             {
                 _repoHint.Text = "That doesn't look like a GitHub repository. Use owner/name, like adamglassner/boardwalk.";
                 _repoHint.SetResourceReference(TextBlock.ForegroundProperty, "DangerText");
                 _repo.Focus();
                 return;
             }
-            repo = $"{owner}/{name}";
+            repo = $"{owner}/{repoName}";
         }
         var name = _name.Text.Trim();
         if (name.Length == 0) { _name.Focus(); return; }
