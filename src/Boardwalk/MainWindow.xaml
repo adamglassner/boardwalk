@@ -57,6 +57,19 @@
                     </Button>
                 </DockPanel>
 
+                <!-- Cards due soon across every board -->
+                <Button x:Name="MyWeekButton" DockPanel.Dock="Top" Style="{StaticResource FlatBase}" Margin="8,0,8,8"
+                        HorizontalContentAlignment="Stretch" Padding="12,8" Click="MyWeek_Click" ToolTip="Cards due this week on all your boards (Ctrl+Shift+W)">
+                    <DockPanel>
+                        <Border x:Name="MyWeekBadge" DockPanel.Dock="Right" CornerRadius="9" Padding="7,0,7,1" VerticalAlignment="Center"
+                                Background="{DynamicResource WarnBg}" Visibility="Collapsed">
+                            <TextBlock x:Name="MyWeekCount" FontSize="12" FontWeight="SemiBold" Foreground="{DynamicResource WarnText}"/>
+                        </Border>
+                        <TextBlock Style="{StaticResource Icon}" Text="&#xE787;" Margin="0,0,10,0"/>
+                        <TextBlock Text="My week"/>
+                    </DockPanel>
+                </Button>
+
                 <TextBlock DockPanel.Dock="Top" Text="Boards" Style="{StaticResource Hint}" FontWeight="SemiBold" Margin="20,4,0,4"/>
 
                 <ListBox x:Name="BoardList" Background="Transparent" BorderThickness="0" Padding="8,0"
@@ -74,6 +87,8 @@
 
             <DockPanel x:Name="BoardHeader" Grid.Row="0" Margin="24,16,16,12" LastChildFill="True">
                 <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Center">
+                    <Button x:Name="UndoButton" Style="{StaticResource IconButton}" Content="&#xE7A7;" ToolTip="Undo (Ctrl+Z)" Click="Undo_Click"/>
+                    <Button x:Name="RedoButton" Style="{StaticResource IconButton}" Content="&#xE7A6;" ToolTip="Redo (Ctrl+Y)" Click="Redo_Click" Margin="0,0,8,0"/>
                     <Grid Width="220" Margin="0,0,8,0">
                         <TextBox x:Name="SearchBox" Padding="30,5,8,5" TextChanged="SearchBox_TextChanged" ToolTip="Search cards (Ctrl+F)"/>
                         <TextBlock Style="{StaticResource Icon}" Text="&#xE721;" FontSize="13" HorizontalAlignment="Left" Margin="10,0,0,0"
@@ -105,6 +120,17 @@
                           Padding="24,0,24,14" PreviewMouseWheel="BoardScroll_PreviewMouseWheel" Focusable="False">
                 <StackPanel x:Name="ColumnsPanel" Orientation="Horizontal"/>
             </ScrollViewer>
+
+            <!-- My week: cards due soon on every board -->
+            <ScrollViewer x:Name="WeekView" Grid.RowSpan="2" VerticalScrollBarVisibility="Auto" Visibility="Collapsed" Padding="28,18,28,18">
+                <StackPanel x:Name="WeekPanel" MaxWidth="920" HorizontalAlignment="Left"/>
+            </ScrollViewer>
+
+            <!-- Short messages (Undone, Closed GitHub issue #12...) -->
+            <Border x:Name="ToastBar" Grid.Row="1" VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="0,0,0,28"
+                    CornerRadius="8" Padding="16,9" Background="{DynamicResource Text}" Visibility="Collapsed" IsHitTestVisible="False">
+                <TextBlock x:Name="ToastText" Foreground="{DynamicResource WindowBg}" FontWeight="SemiBold"/>
+            </Border>
 
             <!-- Shown when there are no boards yet -->
             <StackPanel x:Name="EmptyState" Grid.RowSpan="2" VerticalAlignment="Center" HorizontalAlignment="Center" MaxWidth="440" Visibility="Collapsed">

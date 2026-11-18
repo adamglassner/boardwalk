@@ -33,15 +33,66 @@ public partial class App : Application
             BoardStore.Folder = temp;
         }
 
+        bool startHidden = e.Args.Any(a => a.Equals("--tray", StringComparison.OrdinalIgnoreCase));
+        if (!IsSelfTest && !ClaimSingleInstance())
+        {
+            Shutdown();
+            return;
+        }
+
         SettingsService.Load();
         ThemeManager.Apply(SettingsService.Current);
         SettingsService.Changed += () => ThemeManager.Apply(SettingsService.Current);
 
         BoardStore.Load();
+        if (!IsSelfTest) BoardStore.CleanUpAttachments();
 
         var win = new MainWindow();
         MainWindow = win;
-        win.Show();
+        if (!IsSelfTest)
+        {
+            ReminderService.OpenRequested += week => win.BringToFront(week);
+            ReminderService.ExitRequested += win.ExitApp;
+            ReminderService.Start();
+        }
+        // Started with Windows: stay in the notification area until opened.
+        if (!(startHidden && SettingsService.Current.CloseToTray)) win.Show();
+    }
+
+    private static Mutex _instanceMutex;
+    private static EventWaitHandle _showSignal;
+
+    /// <summary>
+    /// Only one Boardwalk runs at a time (it may be in the notification area). A second start
+    /// asks the first to show its window, then exits.
+    /// </summary>
+    private bool ClaimSingleInstance()
+    {
+        var name = "Boardwalk-" + Environment.UserName;
+        _instanceMutex = new Mutex(true, name, out bool first);
+        _showSignal = new EventWaitHandle(false, EventResetMode.AutoReset, name + "-show", out _);
+        if (!first)
+        {
+            _showSignal.Set();
+            return false;
+        }
+        var t = new Thread(() =>
+        {
+            while (true)
+            {
+                _showSignal.WaitOne();
+                Dispatcher.BeginInvoke(new Action(() => (MainWindow as MainWindow)?.BringToFront(false)));
+            }
+        }) { IsBackground = true, Name = "Boardwalk show signal" };
+        t.Start();
+        return true;
+    }
+
+    protected override void OnExit(ExitEventArgs e)
+    {
+        ReminderService.Stop();
+        try { _instanceMutex?.ReleaseMutex(); } catch { }
+        base.OnExit(e);
     }
 
     private void OnUnhandled(object sender, DispatcherUnhandledExceptionEventArgs e)

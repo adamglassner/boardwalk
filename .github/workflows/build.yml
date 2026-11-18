@@ -136,7 +136,7 @@ jobs:
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         shell: pwsh
         run: |
-          $map = @{ 'board-light' = 'screenshot-light'; 'board-dark' = 'screenshot-dark'; 'dialog-card' = 'screenshot-card'; 'dialog-card-dark' = 'screenshot-card-dark'; 'board-compact' = 'screenshot-compact'; 'dialog-settings' = 'screenshot-settings'; 'dialog-new-board' = 'screenshot-new-board'; 'empty-state' = 'screenshot-empty' }
+          $map = @{ 'board-light' = 'screenshot-light'; 'board-dark' = 'screenshot-dark'; 'dialog-card' = 'screenshot-card'; 'dialog-card-dark' = 'screenshot-card-dark'; 'board-compact' = 'screenshot-compact'; 'dialog-settings' = 'screenshot-settings'; 'dialog-new-board' = 'screenshot-new-board'; 'empty-state' = 'screenshot-empty'; 'board-swimlanes' = 'screenshot-swimlanes'; 'my-week' = 'screenshot-my-week'; 'dialog-changelog' = 'screenshot-changelog'; 'dialog-stats' = 'screenshot-stats'; 'dialog-card-attachments' = 'screenshot-card-attachments'; 'dialog-board' = 'screenshot-board-settings' }
           New-Item -ItemType Directory -Force docs | Out-Null
           foreach ($k in $map.Keys) { if (Test-Path "screenshots/$k.png") { Copy-Item "screenshots/$k.png" "docs/$($map[$k]).png" -Force } }
           git config user.name 'github-actions[bot]'

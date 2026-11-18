@@ -71,6 +71,26 @@ internal static class Ui
         return sp;
     }
 
+    /// <summary>Open / Closed / Merged badge for a card linked to a GitHub issue or pull request.</summary>
+    public static StackPanel GitHubBadge(GitHubRef r, string state)
+    {
+        var (text, hex) = state switch
+        {
+            "open" => ("Open", "#16A34A"),
+            "merged" => ("Merged", "#7C3AED"),
+            "closed" => ("Closed", r.IsPull ? "#DC2626" : "#7C3AED"),
+            _ => (state, "#64748B"),
+        };
+        var sp = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 0, 12, 0) };
+        sp.Children.Add(new TextBlock
+        {
+            Style = (Style)Application.Current.FindResource("Icon"), Text = r.IsPull ? "" : "", FontSize = 11,
+            Foreground = Brush(hex), Margin = new Thickness(0, 0, 4, 0), VerticalAlignment = VerticalAlignment.Center,
+        });
+        sp.Children.Add(new TextBlock { Text = $"#{r.Number} {text}", FontSize = 12, FontWeight = FontWeights.SemiBold, Foreground = Brush(hex), VerticalAlignment = VerticalAlignment.Center });
+        return sp;
+    }
+
     public static string PriorityColor(Priority p) => p switch
     {
         Priority.Urgent => "Red",

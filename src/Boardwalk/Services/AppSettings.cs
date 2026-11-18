@@ -20,6 +20,19 @@ public sealed class AppSettings
     public double ColumnWidth { get; set; } = 290;
     public string LastBoardId { get; set; } = "";
 
+    /// <summary>Show a Windows notification once a day for cards due today or overdue.</summary>
+    public bool RemindersOn { get; set; } = true;
+    /// <summary>Hour of the day (0-23) for the daily reminder.</summary>
+    public int ReminderHour { get; set; } = 9;
+    public string LastReminderDay { get; set; } = "";
+    /// <summary>Closing the window keeps Boardwalk running in the notification area, so reminders still come.</summary>
+    public bool CloseToTray { get; set; } = false;
+    public bool StartWithWindows { get; set; } = false;
+    /// <summary>GitHub personal access token, encrypted for this Windows user (DPAPI).</summary>
+    public string GitHubTokenProtected { get; set; } = "";
+    /// <summary>Show "My week" instead of a board when Boardwalk opens.</summary>
+    public bool ShowMyWeek { get; set; } = false;
+
     public bool RememberWindow { get; set; } = true;
     public double WinLeft { get; set; } = double.NaN;
     public double WinTop { get; set; } = double.NaN;
@@ -39,6 +52,31 @@ public static class SettingsService
     public static AppSettings Current { get; private set; } = new();
 
     public static event Action Changed;
+
+    /// <summary>The GitHub token, decrypted ("" if none). Setting it encrypts and saves it.</summary>
+    public static string GitHubToken
+    {
+        get
+        {
+            if (string.IsNullOrEmpty(Current.GitHubTokenProtected)) return "";
+            try
+            {
+                var bytes = System.Security.Cryptography.ProtectedData.Unprotect(
+                    Convert.FromBase64String(Current.GitHubTokenProtected), Entropy, System.Security.Cryptography.DataProtectionScope.CurrentUser);
+                return System.Text.Encoding.UTF8.GetString(bytes);
+            }
+            catch { return ""; }
+        }
+        set
+        {
+            value = (value ?? "").Trim();
+            Current.GitHubTokenProtected = value.Length == 0 ? "" : Convert.ToBase64String(
+                System.Security.Cryptography.ProtectedData.Protect(System.Text.Encoding.UTF8.GetBytes(value), Entropy, System.Security.Cryptography.DataProtectionScope.CurrentUser));
+            Save();
+        }
+    }
+
+    private static readonly byte[] Entropy = System.Text.Encoding.UTF8.GetBytes("Boardwalk GitHub token");
 
     internal static readonly JsonSerializerOptions Options = new()
     {
@@ -89,6 +127,9 @@ public static class SettingsService
     {
         s.ColumnWidth = double.IsNaN(s.ColumnWidth) ? 290 : Math.Clamp(s.ColumnWidth, 220, 420);
         s.LastBoardId ??= "";
+        s.LastReminderDay ??= "";
+        s.GitHubTokenProtected ??= "";
+        s.ReminderHour = Math.Clamp(s.ReminderHour, 0, 23);
         if (string.IsNullOrWhiteSpace(s.Accent)) s.Accent = "Ocean";
         if (s.WinWidth < 700 || double.IsNaN(s.WinWidth)) s.WinWidth = 1280;
         if (s.WinHeight < 450 || double.IsNaN(s.WinHeight)) s.WinHeight = 800;

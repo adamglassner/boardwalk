@@ -66,8 +66,53 @@ public sealed class SettingsWindow : DialogBase
         panel.Children.Add(Check("Show the start of a card's notes on the card", s.ShowNotesPreview, v => s.ShowNotesPreview = v));
 
         // ---------- Behaviour ----------
+        // ---------- Reminders ----------
+        panel.Children.Add(Header("Reminders"));
+        panel.Children.Add(Check("Remind me about cards due today or overdue", s.RemindersOn, v => s.RemindersOn = v));
+        var timeRow = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(26, 0, 0, 8) };
+        timeRow.Children.Add(new TextBlock { Text = "Once a day, from", VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(0, 0, 8, 0) });
+        var hours = Enumerable.Range(0, 24).Select(h => (object)DateTime.Today.AddHours(h).ToString("h:mm tt")).ToList();
+        var hour = Combo(hours, s.ReminderHour, 120);
+        hour.SelectionChanged += (_, _) => { s.ReminderHour = Math.Max(0, hour.SelectedIndex); s.LastReminderDay = ""; SettingsService.Commit(); };
+        timeRow.Children.Add(hour);
+        panel.Children.Add(timeRow);
+        panel.Children.Add(Check("Keep Boardwalk running in the notification area when its window is closed", s.CloseToTray, v => s.CloseToTray = v));
+        panel.Children.Add(Check("Start Boardwalk when Windows starts (in the notification area)", s.StartWithWindows, v => { s.StartWithWindows = v; if (v) s.CloseToTray = true; }));
+        panel.Children.Add(Hint("Reminders appear as Windows notifications while Boardwalk is running. Keep it in the notification area to get them with the window closed."));
+        var test = new Button { Content = "Show today's reminder now", HorizontalAlignment = HorizontalAlignment.Left, Margin = new Thickness(0, 0, 0, 4) };
+        test.Click += (_, _) =>
+        {
+            if (ReminderService.ReminderText(out _) == null) MessageDialog.Show(this, "Reminders", "Nothing is due today or overdue.");
+            else ReminderService.CheckReminder(force: true);
+        };
+        panel.Children.Add(test);
+
+        // ---------- GitHub ----------
+        panel.Children.Add(Header("GitHub"));
+        panel.Children.Add(Hint("Public repositories work without a token. To import issues from private repositories, or to close issues when cards are completed, add a fine-grained personal access token with Issues: Read and write."));
+        var tokenStatus = new TextBlock { Margin = new Thickness(0, 0, 0, 6) };
+        void ShowTokenStatus() => tokenStatus.Text = SettingsService.GitHubToken.Length > 0 ? "A token is saved (encrypted for your Windows account)." : "No token saved.";
+        ShowTokenStatus();
+        panel.Children.Add(tokenStatus);
+        var tokenRow = new DockPanel();
+        var saveToken = new Button { Content = "Save token", Margin = new Thickness(8, 0, 0, 0) };
+        var removeToken = new Button { Content = "Remove", Margin = new Thickness(8, 0, 0, 0) };
+        DockPanel.SetDock(removeToken, Dock.Right);
+        DockPanel.SetDock(saveToken, Dock.Right);
+        tokenRow.Children.Add(removeToken);
+        tokenRow.Children.Add(saveToken);
+        var tokenBox = new PasswordBox { ToolTip = "Paste the token here" };
+        tokenRow.Children.Add(tokenBox);
+        saveToken.Click += (_, _) => { if (tokenBox.Password.Trim().Length == 0) return; SettingsService.GitHubToken = tokenBox.Password; tokenBox.Clear(); ShowTokenStatus(); };
+        removeToken.Click += (_, _) => { SettingsService.GitHubToken = ""; ShowTokenStatus(); };
+        panel.Children.Add(tokenRow);
+        var makeToken = new Button { Content = "Make a token on GitHub…", HorizontalAlignment = HorizontalAlignment.Left, Margin = new Thickness(0, 8, 0, 0) };
+        makeToken.Click += (_, _) => CardDialog.OpenUrl("https://github.com/settings/personal-access-tokens/new");
+        panel.Children.Add(makeToken);
+
         panel.Children.Add(Header("Deleting"));
         panel.Children.Add(Check("Ask before deleting a card, column or board", s.ConfirmDeletes, v => s.ConfirmDeletes = v));
+        panel.Children.Add(Hint("Undo (Ctrl+Z) brings back anything deleted since Boardwalk started."));
 
         // ---------- Your boards ----------
         panel.Children.Add(Header("Your boards"));
