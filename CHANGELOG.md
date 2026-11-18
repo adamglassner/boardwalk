@@ -2,6 +2,12 @@
 
 All notable changes to Boardwalk. Newest first.
 
+## 1.1.1 - 2026-11-17
+
+### Fixed
+- The Version box in a card's window lines up with the boxes next to it.
+- The board's name has more room in narrow windows (the Add column button is now a + icon).
+
 ## 1.1.0 - 2026-11-17
 
 ### Added

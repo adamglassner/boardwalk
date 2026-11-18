@@ -89,27 +89,22 @@
                 <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Center">
                     <Button x:Name="UndoButton" Style="{StaticResource IconButton}" Content="&#xE7A7;" ToolTip="Undo (Ctrl+Z)" Click="Undo_Click"/>
                     <Button x:Name="RedoButton" Style="{StaticResource IconButton}" Content="&#xE7A6;" ToolTip="Redo (Ctrl+Y)" Click="Redo_Click" Margin="0,0,8,0"/>
-                    <Grid Width="220" Margin="0,0,8,0">
+                    <Grid Width="190" Margin="0,0,8,0">
                         <TextBox x:Name="SearchBox" Padding="30,5,8,5" TextChanged="SearchBox_TextChanged" ToolTip="Search cards (Ctrl+F)"/>
                         <TextBlock Style="{StaticResource Icon}" Text="&#xE721;" FontSize="13" HorizontalAlignment="Left" Margin="10,0,0,0"
                                    Foreground="{DynamicResource TextSecondary}" IsHitTestVisible="False"/>
                         <TextBlock x:Name="SearchHint" Text="Search cards" Foreground="{DynamicResource TextSecondary}" Margin="31,0,0,0"
                                    VerticalAlignment="Center" IsHitTestVisible="False"/>
                     </Grid>
-                    <ComboBox x:Name="LabelFilter" Width="150" Margin="0,0,8,0" ToolTip="Show only cards with this label"
+                    <ComboBox x:Name="LabelFilter" Width="136" Margin="0,0,8,0" ToolTip="Show only cards with this label"
                               SelectionChanged="LabelFilter_SelectionChanged"/>
-                    <Button x:Name="AddColumnButton" Margin="0,0,4,0" Click="AddColumn_Click" ToolTip="Add a column">
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Style="{StaticResource Icon}" Text="&#xE710;" FontSize="12" Margin="0,0,8,0"/>
-                            <TextBlock Text="Column"/>
-                        </StackPanel>
-                    </Button>
+                    <Button x:Name="AddColumnButton" Style="{StaticResource IconButton}" Content="&#xE710;" Click="AddColumn_Click" ToolTip="Add a column (status)"/>
                     <Button x:Name="BoardMenuButton" Style="{StaticResource IconButton}" Content="&#xE712;" ToolTip="Board options" Click="BoardMenu_Click"/>
                 </StackPanel>
                 <StackPanel VerticalAlignment="Center">
                     <StackPanel Orientation="Horizontal">
                         <Border x:Name="BoardDot" Width="12" Height="12" CornerRadius="3" Margin="0,2,10,0" VerticalAlignment="Center"/>
-                        <TextBlock x:Name="BoardTitle" FontSize="22" FontWeight="SemiBold" TextTrimming="CharacterEllipsis"
+                        <TextBlock x:Name="BoardTitle" FontSize="22" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" MinWidth="120"
                                    ToolTip="Double-click to rename (F2)" MouseLeftButtonDown="BoardTitle_MouseDown"/>
                     </StackPanel>
                     <TextBlock x:Name="BoardSubtitle" Style="{StaticResource Hint}" Margin="22,2,0,0" TextTrimming="CharacterEllipsis" TextWrapping="NoWrap"/>

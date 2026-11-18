@@ -54,7 +54,7 @@ public sealed class CardDialog : DialogBase
         _priority.SelectedIndex = (int)card.Priority;
         panel.Children.Add(Pair("Status:", _status, "Priority:", _priority));
 
-        _version = new TextBox { Text = card.Version, ToolTip = "The release this card is part of, like 1.2.0. Used by Write changelog." };
+        _version = new TextBox { Text = card.Version, VerticalAlignment = VerticalAlignment.Center, ToolTip = "The release this card is part of, like 1.2.0. Used by Write changelog." };
         var versionRow = new DockPanel();
         var versions = BoardStore.Versions(board);
         if (versions.Count > 0)
